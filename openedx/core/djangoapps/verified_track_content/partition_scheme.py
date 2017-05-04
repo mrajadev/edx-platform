@@ -10,7 +10,7 @@ from courseware.masquerade import (
 from django.conf import settings
 from opaque_keys.edx.keys import CourseKey
 from openedx.core.djangoapps.verified_track_content.models import VerifiedTrackCohortedCourse
-from openedx.core.lib.partitions.partitions import Group, NoSuchUserPartitionGroupError, UserPartition
+from openedx.core.lib.partitions.partitions import Group, UserPartition
 from student.models import CourseEnrollment
 
 # These IDs must be less than 100 so that they do not overlap with Groups in
