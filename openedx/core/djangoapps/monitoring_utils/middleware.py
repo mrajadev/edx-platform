@@ -19,7 +19,7 @@ except ImportError:
 
 import psutil
 import request_cache
-from openedx.core.djangolib.waffle_utils import WaffleSwitchPlus
+from openedx.core.djangoapps.waffle_utils import WaffleSwitchPlus
 
 
 REQUEST_CACHE_KEY = 'monitoring_custom_metrics'

@@ -2,15 +2,17 @@
 This module is essentially a broker to xmodule/tabs.py -- it was originally introduced to
 perform some LMS-specific tab display gymnastics for the Entrance Exams feature
 """
-import waffle
-
 from django.conf import settings
 from django.utils.translation import ugettext as _, ugettext_noop
 
 from courseware.access import has_access
 from courseware.entrance_exams import user_can_skip_entrance_exam
 from openedx.core.lib.course_tabs import CourseTabPluginManager
-from openedx.features.course_experience import default_course_url_name, UNIFIED_COURSE_EXPERIENCE_FLAG
+from openedx.features.course_experience import default_course_url_name
+from openedx.features.course_experience import (
+    course_experience_config,
+    UNIFIED_COURSE_EXPERIENCE_FLAG,
+)
 from request_cache.middleware import RequestCache
 from student.models import CourseEnrollment
 from xmodule.tabs import CourseTab, CourseTabList, key_checker, link_reverse_func
@@ -66,8 +68,7 @@ class CourseInfoTab(CourseTab):
         """
         The "Home" tab is not shown for the new unified course experience.
         """
-        request = RequestCache.get_current_request()
-        return not waffle.flag_is_active(request, UNIFIED_COURSE_EXPERIENCE_FLAG)
+        return not course_experience_config().is_enabled(UNIFIED_COURSE_EXPERIENCE_FLAG, course.id)
 
 
 class SyllabusTab(EnrolledTab):

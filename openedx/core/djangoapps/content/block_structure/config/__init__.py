@@ -2,7 +2,7 @@
 This module contains various configuration settings via
 waffle switches for the Block Structure framework.
 """
-from openedx.core.djangolib.waffle_utils import WaffleSwitchPlus
+from openedx.core.djangoapps.waffle_utils import WaffleSwitchPlus
 from request_cache.middleware import request_cached
 
 from .models import BlockStructureConfiguration
