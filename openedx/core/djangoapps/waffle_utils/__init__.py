@@ -9,7 +9,7 @@ from request_cache import get_request, get_cache as get_request_cache
 from waffle.testutils import override_switch as waffle_override_switch
 from waffle import flag_is_active, switch_is_active
 
-from .models import CourseOverrideWaffleFlagModel
+from .models import CourseOverrideWaffleFlag
 
 log = logging.getLogger(__name__)
 
@@ -158,9 +158,9 @@ class WaffleFlagPlus(WafflePlus):
 
         Arguments:
             flag_name (String): The name of the flag to check.
-            course_id (CourseLocator): The optional course to check for override before
-                checking the waffle.  If used, the flag_name must be registered
-                as a course_flag.
+            course_id (CourseKey): The optional course to check for override
+                before checking waffle.  If used, the flag_name must be
+                registered as a course_flag.
 
         """
         # validate arguments
@@ -174,11 +174,11 @@ class WaffleFlagPlus(WafflePlus):
         value = self._cached_flags.get(namespaced_flag_name)
         if value is None:
             # first check if waffle flag is forced on or off for the course.
-            force_override = CourseOverrideWaffleFlagModel.override_value(flag_name, course_id)
+            force_override = CourseOverrideWaffleFlag.override_value(namespaced_flag_name, course_id)
 
-            if force_override == CourseOverrideWaffleFlagModel.ALL_CHOICES.on:
+            if force_override == CourseOverrideWaffleFlag.ALL_CHOICES.on:
                 value = True
-            elif force_override == CourseOverrideWaffleFlagModel.ALL_CHOICES.off:
+            elif force_override == CourseOverrideWaffleFlag.ALL_CHOICES.off:
                 value = False
             else:
                 # otherwise, check waffle.

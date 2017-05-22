@@ -2252,7 +2252,7 @@ def auto_auth(request):
             try:
                 # redirect to course home page in LMS
                 redirect_url = reverse(
-                    course_home_url_name(course_id),
+                    course_home_url_name(course_key),
                     kwargs={'course_id': course_id}
                 )
             except NoReverseMatch:

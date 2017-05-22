@@ -7,7 +7,7 @@ from config_models.admin import ConfigurationModelAdmin, KeyedConfigurationModel
 
 
 from .forms import CourseOverrideWaffleFlagAdminForm
-from .models import CourseOverrideWaffleFlagModel
+from .models import CourseOverrideWaffleFlag
 
 
 class CourseOverrideWaffleFlagAdmin(KeyedConfigurationModelAdmin):
@@ -21,9 +21,9 @@ class CourseOverrideWaffleFlagAdmin(KeyedConfigurationModelAdmin):
     search_fields = ['course_id', 'waffle_flag']
     fieldsets = (
         (None, {
-            'fields': ('course_id', 'waffle_flag', 'enabled'),
+            'fields': ('course_id', 'waffle_flag', 'force', 'enabled'),
             'description': 'Enter a valid course id and an existing waffle flag. If they are invalid, an error message will display.'
         }),
     )
 
-admin.site.register(CourseOverrideWaffleFlagModel, CourseOverrideWaffleFlagAdmin)
+admin.site.register(CourseOverrideWaffleFlag, CourseOverrideWaffleFlagAdmin)

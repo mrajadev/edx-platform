@@ -35,11 +35,16 @@ def default_course_url_name(request=None):
         return 'courseware'
 
 
-def course_home_url_name(course_id):
+def course_home_url_name(course_key):
     """
     Returns the course home page's URL name for the current user.
+    
+    Arguments:
+        course_key (CourseKey): The course key for which the home url is being
+            requested.
+            
     """
-    if course_experience_config().is_enabled(UNIFIED_COURSE_EXPERIENCE_FLAG, course_id):
+    if course_experience_config().is_enabled(UNIFIED_COURSE_EXPERIENCE_FLAG, course_key):
         return 'openedx.course_experience.course_home'
     else:
         return 'info'
