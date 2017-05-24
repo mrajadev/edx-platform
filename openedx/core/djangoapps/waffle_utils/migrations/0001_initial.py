@@ -25,5 +25,9 @@ class Migration(migrations.Migration):
                 ('force', models.CharField(default=b'on', max_length=3, choices=[(b'on', 'Force On'), (b'off', 'Force Off')])),
                 ('changed_by', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, editable=False, to=settings.AUTH_USER_MODEL, null=True, verbose_name='Changed by')),
             ],
+            options={
+                'verbose_name': 'Course override waffle flag',
+                'verbose_name_plural': 'Course override waffle flags',
+            },
         ),
     ]
