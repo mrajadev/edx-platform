@@ -266,8 +266,8 @@ def course_info(request, course_id):
     course_key = CourseKey.from_string(course_id)
 
     # If the unified course experience is enabled, redirect to the "Course" tab
-    if course_experience_config().is_enabled(UNIFIED_COURSE_EXPERIENCE_FLAG, course_key):
-        return redirect(reverse(course_home_url_name(course_id), args=[course_id]))
+    if UNIFIED_COURSE_EXPERIENCE_FLAG.is_enabled(course_key):
+        return redirect(reverse(course_home_url_name(course_key), args=[course_id]))
 
     with modulestore().bulk_operations(course_key):
         course = get_course_by_id(course_key, depth=2)

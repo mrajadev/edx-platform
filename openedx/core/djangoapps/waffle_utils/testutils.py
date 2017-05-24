@@ -1,53 +1,60 @@
 """
-Test utilities for waffle plus utilities.
+Test utilities for waffle utilities.
 """
 
 from functools import wraps
 
-from waffle.testutils import override_flag as waffle_override_flag
+from waffle.testutils import override_flag
 
 
-def override_flag_plus(waffle_flag_plus, name, active):
+def override_waffle_flag(flag, active):
     """
-    To be used as a decorator for a test function to override a waffle plus
-    flag.
+    To be used as a decorator for a test function to override a namespaced
+    waffle flag.
 
-        waffle_flag_plus (WaffleFlagPlus): The instance with the proper
-            namespacing for the provided flag.
-        name (String): The name of the flag.
+        flag (WaffleFlag): The namespaced cached waffle flag.
         active (Boolean): The value to which the flag will be set.
 
     Example usage:
 
-        @override_flag_plus(course_experience_config(), UNIFIED_COURSE_EXPERIENCE_FLAG, active=True)
-
-        Where course_experience_config() is a function that returns a
-        WaffleFlagPlus instance.
+        @override_waffle_flag(UNIFIED_COURSE_EXPERIENCE_FLAG, active=True)
 
     """
+
     def real_decorator(function):
+        """
+        Actual decorator function.
+        """
 
         @wraps(function)
         def wrapper(*args, **kwargs):
-            namespaced_name = waffle_flag_plus._namespaced_name(name)
+            """
+            Provides the actual override functionality of the decorator.
 
-            # save previous value
-            flag_existed = namespaced_name in waffle_flag_plus._cached_flags
-            if flag_existed:
-                previous_active = waffle_flag_plus._cached_flags[namespaced_name]
+            Saves the previous cached value of the flag and restores it (if it
+            was set), after overriding it.
+
+            """
+            waffle_namespace = flag.waffle_namespace
+            namespaced_flag_name = waffle_namespace._namespaced_name(flag.flag_name)
+
+            # save previous value and whether it existed in the cache
+            cached_value_existed = namespaced_flag_name in waffle_namespace._cached_flags
+            if cached_value_existed:
+                previous_value = waffle_namespace._cached_flags[namespaced_flag_name]
 
             # set new value
-            waffle_flag_plus._cached_flags[namespaced_name] = active
+            waffle_namespace._cached_flags[namespaced_flag_name] = active
 
-            with waffle_override_flag(namespaced_name, active):
+            with override_flag(namespaced_flag_name, active):
                 # call wrapped function
                 function(*args, **kwargs)
 
             # restore value
-            if flag_existed:
-                waffle_flag_plus._cached_flags[namespaced_name] = previous_active
-            elif namespaced_name in waffle_flag_plus._cached_flags:
-                del waffle_flag_plus._cached_flags[namespaced_name]
+            if cached_value_existed:
+                waffle_namespace._cached_flags[namespaced_flag_name] = previous_value
+            elif namespaced_flag_name in waffle_namespace._cached_flags:
+                del waffle_namespace._cached_flags[namespaced_flag_name]
         return wrapper
 
     return real_decorator

@@ -10,7 +10,7 @@ from openedx.core.djangoapps.xmodule_django.models import CourseKeyField
 from request_cache.middleware import request_cached
 
 
-class CourseOverrideWaffleFlag(ConfigurationModel):
+class CourseOverrideWaffleFlagModel(ConfigurationModel):
     """
     Used to force a waffle flag on or off for a course.
     """
@@ -52,6 +52,8 @@ class CourseOverrideWaffleFlag(ConfigurationModel):
 
     class Meta(object):
         app_label = "waffle_utils"
+        verbose_name = 'Course override waffle flag'
+        verbose_name_plural = 'Course override waffle flags'
 
     def __unicode__(self):
         enabled_label = "Enabled" if self.enabled else "Not Enabled"

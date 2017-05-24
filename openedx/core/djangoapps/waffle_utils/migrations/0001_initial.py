@@ -15,7 +15,7 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='CourseOverrideWaffleFlag',
+            name='CourseOverrideWaffleFlagModel',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('change_date', models.DateTimeField(auto_now_add=True, verbose_name='Change date')),

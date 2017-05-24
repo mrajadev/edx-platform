@@ -5,7 +5,7 @@ from django import forms
 
 from openedx.core.lib.courses import clean_course_id
 
-from .models import CourseOverrideWaffleFlag
+from .models import CourseOverrideWaffleFlagModel
 
 
 class CourseOverrideWaffleFlagAdminForm(forms.ModelForm):
@@ -13,7 +13,7 @@ class CourseOverrideWaffleFlagAdminForm(forms.ModelForm):
     Input form for course override of waffle flags, allowing us to verify data.
     """
     class Meta(object):
-        model = CourseOverrideWaffleFlag
+        model = CourseOverrideWaffleFlagModel
         fields = '__all__'
 
     def clean_course_id(self):
@@ -32,4 +32,4 @@ class CourseOverrideWaffleFlagAdminForm(forms.ModelForm):
             msg = u'Waffle flag must be supplied.'
             raise forms.ValidationError(msg)
 
-        return cleaned_flag
+        return cleaned_flag.strip()

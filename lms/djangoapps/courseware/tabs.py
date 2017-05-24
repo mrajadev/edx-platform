@@ -9,10 +9,7 @@ from courseware.access import has_access
 from courseware.entrance_exams import user_can_skip_entrance_exam
 from openedx.core.lib.course_tabs import CourseTabPluginManager
 from openedx.features.course_experience import default_course_url_name
-from openedx.features.course_experience import (
-    course_experience_config,
-    UNIFIED_COURSE_EXPERIENCE_FLAG,
-)
+from openedx.features.course_experience import UNIFIED_COURSE_EXPERIENCE_FLAG
 from request_cache.middleware import RequestCache
 from student.models import CourseEnrollment
 from xmodule.tabs import CourseTab, CourseTabList, key_checker, link_reverse_func
@@ -68,7 +65,7 @@ class CourseInfoTab(CourseTab):
         """
         The "Home" tab is not shown for the new unified course experience.
         """
-        return not course_experience_config().is_enabled(UNIFIED_COURSE_EXPERIENCE_FLAG, course.id)
+        return not UNIFIED_COURSE_EXPERIENCE_FLAG.is_enabled(course.id)
 
 
 class SyllabusTab(EnrolledTab):

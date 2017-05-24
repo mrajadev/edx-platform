@@ -57,7 +57,7 @@ def clean_course_id(model_form, is_required=True):
         model_form (form.ModelForm): The form that has course_id.
         is_required: True if the course_id is required.
 
-    TODO: Ticket?  Due Date? Should replace all copies of "def clean_course_id".
+    NOTE: This should ultimately replace all copies of "def clean_course_id".
 
     """
     cleaned_id = model_form.cleaned_data["course_id"]
