@@ -6,18 +6,18 @@ from django.contrib import admin
 from config_models.admin import ConfigurationModelAdmin, KeyedConfigurationModelAdmin
 
 
-from .forms import CourseOverrideWaffleFlagAdminForm
-from .models import CourseOverrideWaffleFlagModel
+from .forms import WaffleFlagCourseOverrideAdminForm
+from .models import WaffleFlagCourseOverrideModel
 
 
-class CourseOverrideWaffleFlagAdmin(KeyedConfigurationModelAdmin):
+class WaffleFlagCourseOverrideAdmin(KeyedConfigurationModelAdmin):
     """
     Admin for course override of waffle flags.
 
     Includes search by course_id and waffle_flag.
 
     """
-    form = CourseOverrideWaffleFlagAdminForm
+    form = WaffleFlagCourseOverrideAdminForm
     search_fields = ['course_id', 'waffle_flag']
     fieldsets = (
         (None, {
@@ -26,4 +26,4 @@ class CourseOverrideWaffleFlagAdmin(KeyedConfigurationModelAdmin):
         }),
     )
 
-admin.site.register(CourseOverrideWaffleFlagModel, CourseOverrideWaffleFlagAdmin)
+admin.site.register(WaffleFlagCourseOverrideModel, WaffleFlagCourseOverrideAdmin)

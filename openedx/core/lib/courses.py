@@ -51,11 +51,16 @@ def create_course_image_thumbnail(course, dimensions):
 
 def clean_course_id(model_form, is_required=True):
     """
-    Validate the course_id for a Django ModelForm.
+    Cleans and validates a course_id for use with a Django ModelForm.
 
     Arguments:
-        model_form (form.ModelForm): The form that has course_id.
-        is_required: True if the course_id is required.
+        model_form (form.ModelForm): The form that has a course_id.
+        is_required (Boolean): Default True. When True, validates that the
+            course_id is not empty.  In all cases, when course_id is supplied,
+            validates that it is a valid course.
+
+    Returns:
+        (CourseKey) The cleaned and validated course_id as a CourseKey.
 
     NOTE: This should ultimately replace all copies of "def clean_course_id".
 

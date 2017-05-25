@@ -5,7 +5,7 @@ Tests for the course home page.
 from django.core.urlresolvers import reverse
 
 from openedx.core.djangoapps.waffle_utils.testutils import override_waffle_flag
-from openedx.features.course_experience import UNIFIED_COURSE_EXPERIENCE_FLAG
+from openedx.features.course_experience import UNIFIED_COURSE_TABS_FLAG
 from student.models import CourseEnrollment
 from student.tests.factories import UserFactory
 from xmodule.modulestore import ModuleStoreEnum
@@ -69,13 +69,13 @@ class TestCourseHomePage(SharedModuleStoreTestCase):
         remove_course_updates(self.course)
         super(TestCourseHomePage, self).tearDown()
 
-    @override_waffle_flag(UNIFIED_COURSE_EXPERIENCE_FLAG, active=True)
+    @override_waffle_flag(UNIFIED_COURSE_TABS_FLAG, active=True)
     def test_welcome_message_when_unified(self):
         url = course_home_url(self.course)
         response = self.client.get(url)
         self.assertContains(response, TEST_WELCOME_MESSAGE, status_code=200)
 
-    @override_waffle_flag(UNIFIED_COURSE_EXPERIENCE_FLAG, active=False)
+    @override_waffle_flag(UNIFIED_COURSE_TABS_FLAG, active=False)
     def test_welcome_message_when_not_unified(self):
         url = course_home_url(self.course)
         response = self.client.get(url)

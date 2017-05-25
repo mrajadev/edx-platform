@@ -15,7 +15,7 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='CourseOverrideWaffleFlagModel',
+            name='WaffleFlagCourseOverrideModel',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('change_date', models.DateTimeField(auto_now_add=True, verbose_name='Change date')),
@@ -26,8 +26,8 @@ class Migration(migrations.Migration):
                 ('changed_by', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, editable=False, to=settings.AUTH_USER_MODEL, null=True, verbose_name='Changed by')),
             ],
             options={
-                'verbose_name': 'Course override waffle flag',
-                'verbose_name_plural': 'Course override waffle flags',
+                'verbose_name': 'Waffle flag course override',
+                'verbose_name_plural': 'Waffle flag course overrides',
             },
         ),
     ]

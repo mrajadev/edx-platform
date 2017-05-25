@@ -5,15 +5,15 @@ from django import forms
 
 from openedx.core.lib.courses import clean_course_id
 
-from .models import CourseOverrideWaffleFlagModel
+from .models import WaffleFlagCourseOverrideModel
 
 
-class CourseOverrideWaffleFlagAdminForm(forms.ModelForm):
+class WaffleFlagCourseOverrideAdminForm(forms.ModelForm):
     """
     Input form for course override of waffle flags, allowing us to verify data.
     """
     class Meta(object):
-        model = CourseOverrideWaffleFlagModel
+        model = WaffleFlagCourseOverrideModel
         fields = '__all__'
 
     def clean_course_id(self):

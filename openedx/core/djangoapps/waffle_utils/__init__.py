@@ -3,8 +3,35 @@ Utilities for waffle.
 
 Includes namespacing, caching, and course overrides for waffle flags.
 
-For testing WaffleFlags, see testutils.py.
-For testing WaffleSwitchNamespace, use its context manager.
+Usage:
+
+For Waffle Flags, first set up the namespace, and then create flags using the
+namespace.  For example:
+
+    WAFFLE_FLAG_NAMESPACE = WaffleFlagNamespace(namespace='course_experience', log_prefix=u'Course Experience: ')
+
+    HIDE_SEARCH_FLAG = WaffleFlag(WAFFLE_FLAG_NAMESPACE, 'hide_search')
+   UNIFIED_COURSE_TABS_FLAG = CourseWaffleFlag(WAFFLE_FLAG_NAMESPACE, 'unified_course_tabs')
+ 
+You can check these flags in code using the following:
+
+    HIDE_SEARCH_FLAG.is_enabled()
+    UNIFIED_COURSE_TABS_FLAG.is_enabled(course_key)
+
+To test these WaffleFlags, see testutils.py.
+
+    WAFFLE_SWITCHES = WaffleSwitchNamespace(namespace=WAFFLE_NAMESPACE, log_prefix=u'Grades: ')
+
+    ESTIMATE_FIRST_ATTEMPTED = 'estimate_first_attempted'
+
+You can use the switch as follows:
+
+    WAFFLE_SWITCHES.is_enabled(waffle.ESTIMATE_FIRST_ATTEMPTED)
+
+To test WaffleSwitchNamespace, use the provided context managers.  For example:
+
+    with WAFFLE_SWITCHES.override(waffle.ESTIMATE_FIRST_ATTEMPTED, active=True):
+        ...
 
 """
 from abc import ABCMeta
@@ -16,7 +43,7 @@ from waffle import flag_is_active, switch_is_active
 from opaque_keys.edx.keys import CourseKey
 from request_cache import get_request, get_cache as get_request_cache
 
-from .models import CourseOverrideWaffleFlagModel
+from .models import WaffleFlagCourseOverrideModel
 
 log = logging.getLogger(__name__)
 
@@ -25,10 +52,9 @@ class WaffleNamespace(object):
     """
     A base class for a request cached namespace for waffle flags/switches.
 
-    Once an instance of this class is configured with a namespace
-    (e.g. "my_namespace"), all subclass methods that take a flag or switch name
-    (e.g. "my_flagname") will use a longer namespaced name in waffle
-    (e.g. "my_namespace.my_flagname").
+    An instance of this class represents a single namespace
+    (e.g. "course_experience"), and can be used to work with a set of
+    flags or switches that will all share this namespace.
 
     """
     __metaclass__ = ABCMeta
@@ -52,7 +78,7 @@ class WaffleNamespace(object):
         """
         Returns the namespaced name of the waffle switch/flag.
 
-        For example, the namespaced name of the waffle switch/flag would be:
+        For example, the namespaced name of a waffle switch/flag would be:
             my_namespace.my_setting_name
 
         Arguments:
@@ -62,16 +88,20 @@ class WaffleNamespace(object):
         return u'{}.{}'.format(self.namespace, setting_name)
 
     @staticmethod
-    def _get_namespace_request_cache():
+    def _get_request_cache():
         """
-        Returns the request cache used by WaffleNamespace classes.
+        Returns a request cache shared by all instances of this class.
         """
         return get_request_cache('WaffleNamespace')
 
 
 class WaffleSwitchNamespace(WaffleNamespace):
     """
-    Provides a request cached namespace for waffle switches.
+    Provides a single namespace for a set of waffle switches.
+
+    All namespaced switch values are stored in a single request cache containing
+    all switches for all namespaces.
+
     """
     def is_enabled(self, switch_name):
         """
@@ -126,12 +156,16 @@ class WaffleSwitchNamespace(WaffleNamespace):
         """
         Returns a dictionary of all namespaced switches in the request cache.
         """
-        return self._get_namespace_request_cache().setdefault('switches', {})
+        return self._get_request_cache().setdefault('switches', {})
 
 
 class WaffleFlagNamespace(WaffleNamespace):
     """
-    Provides a request cached namespace for waffle flags.
+    Provides a single namespace for a set of waffle flags.
+
+    All namespaced flag values are stored in a single request cache containing
+    all flags for all namespaces.
+
     """
     __metaclass__ = ABCMeta
 
@@ -140,11 +174,11 @@ class WaffleFlagNamespace(WaffleNamespace):
         """
         Returns a dictionary of all namespaced flags in the request cache.
         """
-        return self._get_namespace_request_cache().setdefault('flags', {})
+        return self._get_request_cache().setdefault('flags', {})
 
-    def is_enabled(self, flag_name, check_before_waffle_callback=None):
+    def is_flag_active(self, flag_name, check_before_waffle_callback=None):
         """
-        Returns and caches whether the given flag is enabled.
+        Returns and caches whether the provided flag is active.
 
         If the flag value is already cached in the request, it is returned.
         If check_before_waffle_callback is supplied, it is called before
@@ -198,10 +232,10 @@ class WaffleFlag(object):
         """
         Returns whether or not the flag is enabled.
         """
-        return self.waffle_namespace.is_enabled(self.flag_name)
+        return self.waffle_namespace.is_flag_active(self.flag_name)
 
 
-class CourseOverrideWaffleFlag(WaffleFlag):
+class CourseWaffleFlag(WaffleFlag):
     """
     Represents a single waffle flag that can be forced on/off for a course.
 
@@ -228,11 +262,11 @@ class CourseOverrideWaffleFlag(WaffleFlag):
                     to check.
 
             """
-            force_override = CourseOverrideWaffleFlagModel.override_value(namespaced_flag_name, course_id)
+            force_override = WaffleFlagCourseOverrideModel.override_value(namespaced_flag_name, course_id)
 
-            if force_override == CourseOverrideWaffleFlagModel.ALL_CHOICES.on:
+            if force_override == WaffleFlagCourseOverrideModel.ALL_CHOICES.on:
                 return True
-            if force_override == CourseOverrideWaffleFlagModel.ALL_CHOICES.off:
+            if force_override == WaffleFlagCourseOverrideModel.ALL_CHOICES.off:
                 return False
             return None
         return course_override_callback
@@ -249,7 +283,7 @@ class CourseOverrideWaffleFlag(WaffleFlag):
         # validate arguments
         assert issubclass(type(course_id), CourseKey), "The course_id '{}' must be a CourseKey.".format(str(course_id))
 
-        return self.waffle_namespace.is_enabled(
+        return self.waffle_namespace.is_flag_active(
             self.flag_name,
             check_before_waffle_callback=self._get_course_override_callback(course_id)
         )
