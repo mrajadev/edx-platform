@@ -22,7 +22,7 @@ def waffle():
     """
     Returns the namespaced and cached Waffle class for BlockStructures.
     """
-    return WaffleSwitchNamespace(namespace=WAFFLE_NAMESPACE, log_prefix=u'BlockStructure: ')
+    return WaffleSwitchNamespace(name=WAFFLE_NAMESPACE, log_prefix=u'BlockStructure: ')
 
 
 @request_cached

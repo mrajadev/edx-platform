@@ -84,10 +84,10 @@ from openedx.core.djangoapps.monitoring_utils import set_custom_metrics_for_cour
 from openedx.core.djangoapps.plugin_api.views import EdxFragmentView
 from openedx.core.djangoapps.programs.utils import ProgramMarketingDataExtender
 from openedx.core.djangoapps.self_paced.models import SelfPacedConfiguration
+from openedx.core.djangoapps.site_configuration import helpers as configuration_helpers
 from openedx.features.course_experience import (
-    UNIFIED_COURSE_TABS_FLAG,
+    UNIFIED_COURSE_TAB_FLAG,
     UNIFIED_COURSE_VIEW_FLAG,
-    course_experience_config,
     course_home_url_name,
 )
 from openedx.features.course_experience.views.course_dates import CourseDatesFragmentView
@@ -266,7 +266,7 @@ def course_info(request, course_id):
     course_key = CourseKey.from_string(course_id)
 
     # If the unified course experience is enabled, redirect to the "Course" tab
-    if UNIFIED_COURSE_TABS_FLAG.is_enabled(course_key):
+    if UNIFIED_COURSE_TAB_FLAG.is_enabled(course_key):
         return redirect(reverse(course_home_url_name(course_key), args=[course_id]))
 
     with modulestore().bulk_operations(course_key):

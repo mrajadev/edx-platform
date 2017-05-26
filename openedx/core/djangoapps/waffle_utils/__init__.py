@@ -8,23 +8,32 @@ Usage:
 For Waffle Flags, first set up the namespace, and then create flags using the
 namespace.  For example:
 
-    WAFFLE_FLAG_NAMESPACE = WaffleFlagNamespace(namespace='course_experience', log_prefix=u'Course Experience: ')
+   WAFFLE_FLAG_NAMESPACE = WaffleFlagNamespace(name='course_experience')
 
-    HIDE_SEARCH_FLAG = WaffleFlag(WAFFLE_FLAG_NAMESPACE, 'hide_search')
-   UNIFIED_COURSE_TABS_FLAG = CourseWaffleFlag(WAFFLE_FLAG_NAMESPACE, 'unified_course_tabs')
- 
+   HIDE_SEARCH_FLAG = WaffleFlag(WAFFLE_FLAG_NAMESPACE, 'hide_search')
+   UNIFIED_COURSE_TAB_FLAG = CourseWaffleFlag(WAFFLE_FLAG_NAMESPACE, 'unified_course_tab')
+
 You can check these flags in code using the following:
 
     HIDE_SEARCH_FLAG.is_enabled()
-    UNIFIED_COURSE_TABS_FLAG.is_enabled(course_key)
+    UNIFIED_COURSE_TAB_FLAG.is_enabled(course_key)
 
 To test these WaffleFlags, see testutils.py.
 
-    WAFFLE_SWITCHES = WaffleSwitchNamespace(namespace=WAFFLE_NAMESPACE, log_prefix=u'Grades: ')
+In the above examples, you will use Django Admin "waffle" section to configure
+for a flag named: course_experience.unified_course_tab
+
+You could also use the Django Admin "waffle_utils" section to configure a course
+override for this same flag (e.g. course_experience.unified_course_tab).
+
+For Waffle Switches, first set up the namespace, and then create the flag name.
+For example:
+
+    WAFFLE_SWITCHES = WaffleSwitchNamespace(name=WAFFLE_NAMESPACE)
 
     ESTIMATE_FIRST_ATTEMPTED = 'estimate_first_attempted'
 
-You can use the switch as follows:
+You can then use the switch as follows:
 
     WAFFLE_SWITCHES.is_enabled(waffle.ESTIMATE_FIRST_ATTEMPTED)
 
@@ -59,20 +68,20 @@ class WaffleNamespace(object):
     """
     __metaclass__ = ABCMeta
 
-    def __init__(self, namespace, log_prefix=None):
+    def __init__(self, name, log_prefix=None):
         """
         Initializes the waffle namespace instance.
 
         Arguments:
-            namespace (String): Namespace string appended to start of all waffle
+            name (String): Namespace string appended to start of all waffle
                 flags and switches (e.g. "grades")
             log_prefix (String): Optional string to be appended to log messages
-                (e.g. "Grades: ")
+                (e.g. "Grades: "). Defaults to ''.
 
         """
-        assert namespace, "The namespace is required."
-        self.namespace = namespace
-        self.log_prefix = log_prefix
+        assert name, "The name is required."
+        self.name = name
+        self.log_prefix = log_prefix if log_prefix else ''
 
     def _namespaced_name(self, setting_name):
         """
@@ -85,7 +94,7 @@ class WaffleNamespace(object):
             setting_name (String): The name of the flag or switch.
 
         """
-        return u'{}.{}'.format(self.namespace, setting_name)
+        return u'{}.{}'.format(self.name, setting_name)
 
     @staticmethod
     def _get_request_cache():

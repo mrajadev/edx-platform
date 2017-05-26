@@ -12,10 +12,10 @@ from request_cache.middleware import RequestCache
 UNIFIED_COURSE_VIEW_FLAG = 'unified_course_view'
 
 # Namespace for course experience waffle flags.
-WAFFLE_FLAG_NAMESPACE = WaffleFlagNamespace(namespace='course_experience', log_prefix=u'Course Experience: ')
+WAFFLE_FLAG_NAMESPACE = WaffleFlagNamespace(name='course_experience')
 
 # Waffle flag to enable a single unified "Course" tab.
-UNIFIED_COURSE_TABS_FLAG = CourseWaffleFlag(WAFFLE_FLAG_NAMESPACE, 'unified_course_tabs')
+UNIFIED_COURSE_TAB_FLAG = CourseWaffleFlag(WAFFLE_FLAG_NAMESPACE, 'unified_course_tab')
 
 
 def default_course_url_name(request=None):
@@ -37,7 +37,7 @@ def course_home_url_name(course_key):
             requested.
 
     """
-    if UNIFIED_COURSE_TABS_FLAG.is_enabled(course_key):
+    if UNIFIED_COURSE_TAB_FLAG.is_enabled(course_key):
         return 'openedx.course_experience.course_home'
     else:
         return 'info'

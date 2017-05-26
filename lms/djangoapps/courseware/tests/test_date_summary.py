@@ -23,7 +23,7 @@ from courseware.date_summary import (
 from openedx.core.djangoapps.self_paced.models import SelfPacedConfiguration
 from openedx.core.djangoapps.user_api.preferences.api import set_user_preference
 from openedx.core.djangoapps.waffle_utils.testutils import override_waffle_flag
-from openedx.features.course_experience import UNIFIED_COURSE_TABS_FLAG
+from openedx.features.course_experience import UNIFIED_COURSE_TAB_FLAG
 from student.tests.factories import CourseEnrollmentFactory, UserFactory
 from lms.djangoapps.verify_student.models import VerificationDeadline
 from lms.djangoapps.verify_student.tests.factories import SoftwareSecurePhotoVerificationFactory
@@ -194,7 +194,7 @@ class CourseDateSummaryTest(SharedModuleStoreTestCase):
         'info',
         'openedx.course_experience.course_home',
     )
-    @override_waffle_flag(UNIFIED_COURSE_TABS_FLAG, active=True)
+    @override_waffle_flag(UNIFIED_COURSE_TAB_FLAG, active=True)
     def test_todays_date_no_timezone(self, url_name):
         with freeze_time('2015-01-02'):
             self.setup_course_and_user()
@@ -218,7 +218,7 @@ class CourseDateSummaryTest(SharedModuleStoreTestCase):
         'info',
         'openedx.course_experience.course_home',
     )
-    @override_waffle_flag(UNIFIED_COURSE_TABS_FLAG, active=True)
+    @override_waffle_flag(UNIFIED_COURSE_TAB_FLAG, active=True)
     def test_todays_date_timezone(self, url_name):
         with freeze_time('2015-01-02'):
             self.setup_course_and_user()
@@ -249,7 +249,7 @@ class CourseDateSummaryTest(SharedModuleStoreTestCase):
         'info',
         'openedx.course_experience.course_home',
     )
-    @override_waffle_flag(UNIFIED_COURSE_TABS_FLAG, active=True)
+    @override_waffle_flag(UNIFIED_COURSE_TAB_FLAG, active=True)
     def test_start_date_render(self, url_name):
         with freeze_time('2015-01-02'):
             self.setup_course_and_user()
@@ -267,7 +267,7 @@ class CourseDateSummaryTest(SharedModuleStoreTestCase):
         'info',
         'openedx.course_experience.course_home',
     )
-    @override_waffle_flag(UNIFIED_COURSE_TABS_FLAG, active=True)
+    @override_waffle_flag(UNIFIED_COURSE_TAB_FLAG, active=True)
     def test_start_date_render_time_zone(self, url_name):
         with freeze_time('2015-01-02'):
             self.setup_course_and_user()

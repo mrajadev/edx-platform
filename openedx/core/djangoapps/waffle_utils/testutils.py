@@ -17,7 +17,7 @@ def override_waffle_flag(flag, active):
 
     Example usage:
 
-        @override_waffle_flag(UNIFIED_COURSE_TABS_FLAG, active=True)
+        @override_waffle_flag(UNIFIED_COURSE_TAB_FLAG, active=True)
 
     """
 

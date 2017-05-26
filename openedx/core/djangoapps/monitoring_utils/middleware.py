@@ -163,4 +163,4 @@ class MonitoringMemoryMiddleware(object):
         """
         Returns whether this middleware is enabled.
         """
-        return WaffleSwitchNamespace(namespace=WAFFLE_NAMESPACE).is_enabled(u'enable_memory_middleware')
+        return WaffleSwitchNamespace(name=WAFFLE_NAMESPACE).is_enabled(u'enable_memory_middleware')
