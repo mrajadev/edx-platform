@@ -199,13 +199,17 @@ define(
 
                 AjaxHelpers.respondWithError(requests, 400);
 
-                verifyStateInfo(videoThumbnailView, $thumbnail, 'error');
+                verifyStateInfo($thumbnail, 'error');
             });
 
             it('calls readMessage with correct message', function() {
+                var data = {
+                    files: [createFakeImageFile()]
+                    submit: function() {}
+                };
                 spyOn(videoThumbnailView, 'readMessages');
 
-                videoThumbnailView.imageSelected({}, {submit: function() {}});
+                videoThumbnailView.imageSelected({}, data);
                 expect(videoThumbnailView.readMessages).toHaveBeenCalledWith(['Video image upload started']);
                 videoThumbnailView.imageUploadSucceeded({}, {result: {image_url: UPLOADED_IMAGE_URL}});
                 expect(videoThumbnailView.readMessages).toHaveBeenCalledWith(['Video image upload completed']);
@@ -214,7 +218,10 @@ define(
             });
 
             it('should show error message in case of server error', function() {
-                var $el = render({}),
+                var videoView = createVideoView({}),
+                    $videoEl = videoView.render().$el,
+                    videoThumbnailView = videoView.videoThumbnailView,
+                    $el = videoThumbnailView.render().$el,
                     requests = AjaxHelpers.requests(this);
 
                 videoThumbnailView.chooseFile();

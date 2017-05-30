@@ -25,7 +25,21 @@ define(
                     );
                     var view = new PreviousVideoUploadListView({
                         collection: collection,
-                        videoHandlerUrl: videoHandlerUrl
+                        videoHandlerUrl: videoHandlerUrl,
+                        videoImageSettings: {
+                            'max_size': 2 * 1024 * 1024,
+                            'min_size': 2 * 1024,
+                            'max_width': 1280,
+                            'max_height': 720,
+                            'supported_file_formats': {
+                                '.png': 'image/png',
+                                '.gif': 'image/gif',
+                                '.bmp': 'image/bmp',
+                                '.bmp2': 'image/x-ms-bmp',   // PIL gives x-ms-bmp format
+                                '.jpg': 'image/jpeg',
+                                '.jpeg': 'image/jpeg',
+                            },
+                        },
                     });
                     return view.render().$el;
                 },
