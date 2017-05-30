@@ -32,7 +32,9 @@
                 },
 
                 cohortStateUpdate: function(state){
-                    this.showDiscussionManagement(state['is_cohorted'])
+                    if ($('.discussions-management').data('enrollment-track-count') <= 1) {
+                        this.showDiscussionManagement(state['is_cohorted'])
+                    }
                 },
 
                 showDiscussionManagement: function(show){

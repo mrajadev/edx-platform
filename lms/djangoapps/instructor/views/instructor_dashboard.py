@@ -125,7 +125,7 @@ def instructor_dashboard_2(request, course_id):
         _section_course_info(course, access),
         _section_membership(course, access, is_white_label),
         _section_cohort_management(course, access),
-        _section_discussions_management(course, access, 2),# TODO: Update the enrollment track to be dynamic
+        _section_discussions_management(course, access, 1),# TODO: Update the enrollment track to be dynamic
         _section_student_admin(course, access),
         _section_data_download(course, access),
     ]
