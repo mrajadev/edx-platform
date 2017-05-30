@@ -11,10 +11,11 @@ from django.views.decorators.cache import cache_control
 from opaque_keys.edx.keys import CourseKey
 from web_fragments.fragment import Fragment
 
-from courseware.courses import get_course_info_section, get_course_with_access
+from courseware.courses import get_course_with_access, get_course_info_section_module
 from lms.djangoapps.courseware.views.views import CourseTabView
 from openedx.core.djangoapps.plugin_api.views import EdxFragmentView
 from openedx.features.course_experience import default_course_url_name
+from xmodule.html_module import CourseInfoModule
 
 
 class CourseUpdatesView(CourseTabView):
@@ -39,6 +40,8 @@ class CourseUpdatesFragmentView(EdxFragmentView):
     """
     A fragment to render the home page for a course.
     """
+    STATUS_VISIBLE = 'visible'
+
     def render_to_fragment(self, request, course_id=None, **kwargs):
         """
         Renders the course's home page as a fragment.
@@ -48,17 +51,29 @@ class CourseUpdatesFragmentView(EdxFragmentView):
         course_url_name = default_course_url_name(request)
         course_url = reverse(course_url_name, kwargs={'course_id': unicode(course.id)})
 
-        # Fetch the updates as HTML
-        updates_html = get_course_info_section(request, request.user, course, 'updates')
+        # Fetch all of the updates
+        info_module = get_course_info_section_module(request, request.user, course, 'updates')
+        ordered_updates = self.order_updates(info_module.items)
 
         # Render the course home fragment
         context = {
             'csrf': csrf(request)['csrf_token'],
             'course': course,
             'course_url': course_url,
-            'updates_html': updates_html,
+            'updates': ordered_updates,
             'disable_courseware_js': True,
             'uses_pattern_library': True,
         }
         html = render_to_string('course_experience/course-updates-fragment.html', context)
         return Fragment(html)
+
+    def order_updates(self, updates):
+        """
+        Returns any course updates in reverse chronological order.
+        """
+        course_updates = [update for update in updates if update.get('status') == self.STATUS_VISIBLE]
+        course_updates.sort(
+            key=lambda item: (CourseInfoModule.safe_parse_date(item['date']), item['id']),
+            reverse=True
+        )
+        return course_updates
