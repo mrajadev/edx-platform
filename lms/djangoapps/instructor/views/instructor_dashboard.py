@@ -125,7 +125,7 @@ def instructor_dashboard_2(request, course_id):
         _section_course_info(course, access),
         _section_membership(course, access, is_white_label),
         _section_cohort_management(course, access),
-        _section_discussions_management(course, access),
+        _section_discussions_management(course, access, 2),# TODO: Update the enrollment track to be dynamic
         _section_student_admin(course, access),
         _section_data_download(course, access),
     ]
@@ -521,12 +521,14 @@ def _section_cohort_management(course, access):
     return section_data
 
 
-def _section_discussions_management(course, access):
+def _section_discussions_management(course, access, enrollment_track_count):
     """ Provide data for the corresponding discussion management section """
     course_key = course.id
     section_data = {
         'section_key': 'discussions_management',
         'section_display_name': _('Discussions'),
+        'is_hidden': not is_course_cohorted(course_key) and (enrollment_track_count <= 1),
+        'enrollment_track_count': enrollment_track_count,
         'discussion_topics_url': reverse('discussion_topics', kwargs={'course_key_string': unicode(course_key)}),
         'course_discussion_settings': reverse(
             'course_discussions_settings',
