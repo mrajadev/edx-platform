@@ -67,7 +67,7 @@
                     this.notification = new NotificationView({
                         model: model
                     });
-                    self.$('.field-radio').before(this.notification.$el);
+                    self.$('.division-scheme-container').before(this.notification.$el);
                     this.notification.render();
                 },
 
