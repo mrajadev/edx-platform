@@ -8,7 +8,8 @@
         'js/views/notification'
     ],
 
-        function($, _, Backbone, gettext, InlineDiscussionsView, CourseWideDiscussionsView, HtmlUtils) {
+        function($, _, Backbone, gettext, InlineDiscussionsView, CourseWideDiscussionsView, HtmlUtils,
+                 NotificationModel, NotificationView) {
             var hiddenClass = 'is-hidden';
             var cohort = 'cohort';
             var none = 'none';
@@ -107,8 +108,8 @@
 
                     this.removeNotification();
                     showErrorMessage = function(message) {
-                            self.showMessage(message, 'error');
-                        };
+                        self.showMessage(message, 'error');
+                    };
 
                     discussionSettingsModel.save(
                         fieldData, {patch: true, wait: true}
@@ -145,15 +146,17 @@
 
                 showSelectMessage: function(selectedScheme, messageSpan) {
                     switch (selectedScheme) {
-                        case none:
-                            messageSpan.text(gettext('Discussion topics in the course are not divided.'));
-                            break;
-                        case enrollmentTrack:
-                            messageSpan.text(gettext('Any divided discussion topics are divided based on enrollment track.'));
-                            break;
-                        case cohort:
-                            messageSpan.text(gettext('Any divided discussion topics are divided based on cohort.'));
-                            break;
+                    case none:
+                        messageSpan.text(gettext('Discussion topics in the course are not divided.'));
+                        break;
+                    case enrollmentTrack:
+                        messageSpan.text(gettext('Any divided discussion topics are divided based on enrollment track.')); //  eslint-disable-line max-len
+                        break;
+                    case cohort:
+                        messageSpan.text(gettext('Any divided discussion topics are divided based on cohort.'));
+                        break;
+                    default:
+                        break;
                     }
                 },
 
