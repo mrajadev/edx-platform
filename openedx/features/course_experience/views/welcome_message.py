@@ -9,6 +9,8 @@ from web_fragments.fragment import Fragment
 from courseware.courses import get_course_info_section_module, get_course_with_access
 from openedx.core.djangoapps.plugin_api.views import EdxFragmentView
 
+from course_updates import CourseUpdatesFragmentView
+
 
 class WelcomeMessageFragmentView(EdxFragmentView):
     """
@@ -43,10 +45,10 @@ class WelcomeMessageFragmentView(EdxFragmentView):
             return None
 
         # Return the course update with the most recent publish date
-        info_block = getattr(info_module, '_xmodule', info_module)
-        ordered_updates = info_block.ordered_updates()
+        ordered_updates = CourseUpdatesFragmentView.order_updates(info_module.items)
         content = None
         if ordered_updates:
+            info_block = getattr(info_module, '_xmodule', info_module)
             content = info_block.system.replace_urls(ordered_updates[0]['content'])
 
         return content

@@ -1,6 +1,7 @@
 """
 Views that handle course updates.
 """
+from datetime import datetime
 
 from django.contrib.auth.decorators import login_required
 from django.core.context_processors import csrf
@@ -40,8 +41,6 @@ class CourseUpdatesFragmentView(EdxFragmentView):
     """
     A fragment to render the home page for a course.
     """
-    STATUS_VISIBLE = 'visible'
-
     def render_to_fragment(self, request, course_id=None, **kwargs):
         """
         Renders the course's home page as a fragment.
@@ -51,9 +50,12 @@ class CourseUpdatesFragmentView(EdxFragmentView):
         course_url_name = default_course_url_name(request)
         course_url = reverse(course_url_name, kwargs={'course_id': unicode(course.id)})
 
-        # Fetch all of the updates
+        # Fetch all of the updates individually
         info_module = get_course_info_section_module(request, request.user, course, 'updates')
         ordered_updates = self.order_updates(info_module.items)
+
+        # Older implementations and a few tests store a single html object representing all the updates
+        plain_html_updates = info_module.data
 
         # Render the course home fragment
         context = {
@@ -61,19 +63,31 @@ class CourseUpdatesFragmentView(EdxFragmentView):
             'course': course,
             'course_url': course_url,
             'updates': ordered_updates,
+            'plain_html_updates': plain_html_updates,
             'disable_courseware_js': True,
             'uses_pattern_library': True,
         }
         html = render_to_string('course_experience/course-updates-fragment.html', context)
         return Fragment(html)
 
+    @classmethod
     def order_updates(self, updates):
         """
         Returns any course updates in reverse chronological order.
         """
-        course_updates = [update for update in updates if update.get('status') == self.STATUS_VISIBLE]
-        course_updates.sort(
-            key=lambda item: (CourseInfoModule.safe_parse_date(item['date']), item['id']),
+        sorted_updates = [update for update in updates if update.get('status') == CourseInfoModule.STATUS_VISIBLE]
+        sorted_updates.sort(
+            key=lambda item: (self.safe_parse_date(item['date']), item['id']),
             reverse=True
         )
-        return course_updates
+        return sorted_updates
+
+    @staticmethod
+    def safe_parse_date(date):
+        """
+        Since this is used solely for ordering purposes, use today's date as a default
+        """
+        try:
+            return datetime.strptime(date, '%B %d, %Y')
+        except ValueError:  # occurs for ill-formatted date values
+            return datetime.today()
