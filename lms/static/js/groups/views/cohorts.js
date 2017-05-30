@@ -6,15 +6,19 @@
             'js/groups/views/course_cohort_settings_notification',
             'js/groups/views/verified_track_settings_notification',
             'edx-ui-toolkit/js/utils/html-utils',
-            'js/views/file_uploader', 'js/models/notification', 'js/views/notification', 'string_utils'],
-        function($, _, Backbone, gettext, CohortModel, VerifiedTrackSettingsModel, CohortEditorView, CohortFormView,
-                CourseCohortSettingsNotificationView, VerifiedTrackSettingsNotificationView, HtmlUtils) {
+            'js/instructor_dashboard/base_dashboard_view',
+            'js/views/file_uploader', 'js/models/notification', 'js/views/notification',
+            'string_utils'],
+        function($, _, Backbone, gettext, CohortModel,
+                 VerifiedTrackSettingsModel,
+                 CohortEditorView, CohortFormView,
+                CourseCohortSettingsNotificationView,
+                 VerifiedTrackSettingsNotificationView, HtmlUtils, BaseDashboardView) {
             var hiddenClass = 'is-hidden',
                 disabledClass = 'is-disabled',
                 enableCohortsSelector = '.cohorts-state';
 
-
-            var CohortsView = Backbone.View.extend({
+            var CohortsView = BaseDashboardView.extend({
                 events: {
                     'change .cohort-select': 'onCohortSelected',
                     'change .cohorts-state': 'onCohortsEnabledChanged',
@@ -27,7 +31,6 @@
 
                 initialize: function(options) {
                     var model = this.model;
-
                     this.template = HtmlUtils.template($('#cohorts-tpl').text());
                     this.selectorTemplate = HtmlUtils.template($('#cohort-selector-tpl').text());
                     this.context = options.context;
@@ -151,6 +154,7 @@
                     ).done(function() {
                         self.render();
                         self.renderCourseCohortSettingsNotificationView();
+                        self.pubSub.trigger('cohorts:state', fieldData);
                     }).fail(function(result) {
                         self.showNotification({
                             type: 'error',
