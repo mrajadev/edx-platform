@@ -82,10 +82,11 @@ define(
 
             getVideoImageSupportedFileFormats: function() {
                 var supportedFormats = _.reject(_.keys(this.videoImageSettings.supported_file_formats), function(item) {
+                    // Don't show redundant extensions to end user.
                     return item === '.bmp2' || item === '.jpeg';
-                });
+                }).sort();
                 return {
-                    humanize: supportedFormats.slice(0, -1).join(', ') + ' or ' + supportedFormats.slice(-1).sort(),
+                    humanize: supportedFormats.slice(0, -1).join(', ') + ' or ' + supportedFormats.slice(-1),
                     machine: _.values(this.videoImageSettings.supported_file_formats).sort()
                 };
             },
@@ -224,19 +225,21 @@ define(
 
             imageUploadFailed: function(event, data) {
                 var errorText = JSON.parse(data.jqXHR.responseText).error;
-                this.action = 'error';
-                this.setActionInfo(this.action, true);
                 this.showErrorMessage(errorText);
             },
 
             showErrorMessage: function(errorText) {
+                var orignalParentHTML;
+                this.action = 'error';
+                this.setActionInfo(this.action, true);
                 this.readMessages([gettext('Video image upload failed'), errorText]);
+                orignalParentHTML = this.$el.parent().html();
                 HtmlUtils.setHtml(
                     this.$el.parent(),
                     this.errorTemplate({
                         icon: this.actionsInfo.error.icon,
                         error: errorText,
-                        orignalParentHTML: this.$el.parent().html()
+                        orignalParentHTML: orignalParentHTML
                     })
                 );
             },
