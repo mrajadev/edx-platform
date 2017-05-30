@@ -14,8 +14,8 @@ import pystache_custom as pystache
 from opaque_keys.edx.locations import i4xEncoder
 from opaque_keys.edx.keys import CourseKey
 from xmodule.modulestore.django import modulestore
-from xmodule.partitions.partitions_service import PartitionService
-from xmodule.partitions.partitions import ENROLLMENT_TRACK_PARTITION_ID
+from openedx.core.lib.partitions.partitions_service import PartitionService
+from openedx.core.lib.partitions.partitions import ENROLLMENT_TRACK_PARTITION_ID
 
 from django_comment_client.constants import TYPE_ENTRY, TYPE_SUBCATEGORY
 from django_comment_client.permissions import check_permissions_by_view, has_permission, get_team
