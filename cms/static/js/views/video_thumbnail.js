@@ -45,7 +45,7 @@ define(
                         icon: '',
                         text: HtmlUtils.interpolateHtml(
                             // Translators: This is a 3 part text which tells the image requirements.
-                            gettext('Image requirements {lineBreak} {videoImageResoultion} {lineBreak} {videoImageSupportedFileFormats}'),
+                            gettext('Image requirements {lineBreak} {videoImageResoultion} {lineBreak} {videoImageSupportedFileFormats}'),   // eslint-disable-line max-len
                             {
                                 videoImageResoultion: this.getVideoImageResolution(),
                                 videoImageSupportedFileFormats: this.getVideoImageSupportedFileFormats().humanize,
@@ -53,7 +53,7 @@ define(
                             }
                         ).toString()
                     }
-                },
+                };
 
                 _.bindAll(
                     this, 'render', 'chooseFile', 'imageSelected', 'imageUploadSucceeded', 'imageUploadFailed',
@@ -81,32 +81,34 @@ define(
             },
 
             getVideoImageSupportedFileFormats: function() {
-                var supportedFormats = _.keys(this.videoImageSettings['supported_file_formats']).sort();
+                var supportedFormats = _.reject(_.keys(this.videoImageSettings.supported_file_formats), function(item) {
+                    return item === '.bmp2' || item === '.jpeg';
+                });
                 return {
-                    humanize: supportedFormats.slice(0, -1).join(', ') + ' or ' + supportedFormats.slice(-1),
-                    machine: _.values(this.videoImageSettings['supported_file_formats']).sort()
-                }
+                    humanize: supportedFormats.slice(0, -1).join(', ') + ' or ' + supportedFormats.slice(-1).sort(),
+                    machine: _.values(this.videoImageSettings.supported_file_formats).sort()
+                };
             },
 
             getVideoImageMaxSize: function() {
                 return {
-                    humanize: this.videoImageSettings['max_size']/(1024*1024) + ' MB',
-                    machine: this.videoImageSettings['max_size']
-                }
+                    humanize: this.videoImageSettings.max_size / (1024 * 1024) + ' MB',
+                    machine: this.videoImageSettings.max_size
+                };
             },
 
             getVideoImageMinSize: function() {
                 return {
-                    humanize: this.videoImageSettings['min_size']/1024 + ' KB',
-                    machine: this.videoImageSettings['min_size']
-                }
+                    humanize: this.videoImageSettings.min_size / 1024 + ' KB',
+                    machine: this.videoImageSettings.min_size
+                };
             },
 
             getVideoImageResolution: function() {
                 return StringUtils.interpolate(
                     // Translators: message will be like 1280x720 pixels
                     gettext('{maxWidth}x{maxHeight} pixels'),
-                    {maxWidth: this.videoImageSettings['max_width'], maxHeight: this.videoImageSettings['max_height']}
+                    {maxWidth: this.videoImageSettings.max_width, maxHeight: this.videoImageSettings.max_height}
                 );
             },
 
@@ -203,7 +205,8 @@ define(
             imageSelected: function(event, data) {
                 var errorMessage = this.validateImageFile(data.files[0]);
                 if (!errorMessage) {
-                    data['global'] = false;   // Do not trigger global AJAX error handler
+                    // Do not trigger global AJAX error handler
+                    data.global = false;    // eslint-disable-line no-param-reassign
                     this.readMessages([gettext('Video image upload started')]);
                     this.showUploadInProgressMessage();
                     data.submit();
@@ -220,27 +223,22 @@ define(
             },
 
             imageUploadFailed: function(event, data) {
-                var errorText = JSON.parse(data.jqXHR.responseText)['error'];
+                var errorText = JSON.parse(data.jqXHR.responseText).error;
                 this.action = 'error';
                 this.setActionInfo(this.action, true);
                 this.showErrorMessage(errorText);
-                this.undelegateEvents();
-                this.delegateEvents(); // this will bind all events once again
             },
 
             showErrorMessage: function(errorText) {
-                var $thumbnailWrapperEl = this.$el.parent().find('.thumbnail-wrapper');
                 this.readMessages([gettext('Video image upload failed'), errorText]);
                 HtmlUtils.setHtml(
                     this.$el.parent(),
                     this.errorTemplate({
-                        icon: this.actionsInfo['error'].icon,
+                        icon: this.actionsInfo.error.icon,
                         error: errorText,
                         orignalParentHTML: this.$el.parent().html()
                     })
                 );
-                this.$el = $('.thumbnail-error-wrapper .thumbnail-wrapper');
-                //this.setElement($('.thumbnail-error-wrapper .thumbnail-wrapper'));
             },
 
             showUploadInProgressMessage: function() {
@@ -280,9 +278,8 @@ define(
             },
 
             validateImageFile: function(imageFile) {
-                var errorMessage = '';
                 var self = this,
-                    fileName = imageFile.name,
+                    errorMessage = '',
                     fileType = imageFile.type;
 
                 if (!_.contains(self.getVideoImageSupportedFileFormats().machine, fileType)) {

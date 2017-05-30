@@ -16,18 +16,18 @@ define(
                         model: new Backbone.Model($.extend({}, defaultData, modelData)),
                         videoHandlerUrl: '/videos/course-v1:org.0+course_0+Run_0',
                         videoImageSettings: {
-                            'max_size': 2 * 1024 * 1024,
-                            'min_size': 2 * 1024,
-                            'max_width': 1280,
-                            'max_height': 720,
-                            'supported_file_formats': {
+                            max_size: 2 * 1024 * 1024,
+                            min_size: 2 * 1024,
+                            max_width: 1280,
+                            max_height: 720,
+                            supported_file_formats: {
                                 '.png': 'image/png',
                                 '.gif': 'image/gif',
                                 '.bmp': 'image/bmp',
                                 '.bmp2': 'image/x-ms-bmp',   // PIL gives x-ms-bmp format
                                 '.jpg': 'image/jpeg',
-                                '.jpeg': 'image/jpeg',
-                            },
+                                '.jpeg': 'image/jpeg'
+                            }
                         }
                     });
                 return view.render().$el;
