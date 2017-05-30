@@ -26,11 +26,12 @@
                 },
 
                 render: function() {
+                    var selectedScheme, topicNav;
                     HtmlUtils.setHtml(this.$el, this.template({
                         availableSchemes: this.getDivisionSchemeData(this.discussionSettings.attributes.division_scheme)
                     }));
-                    var selectedScheme = this.getSelectedScheme(),
-                        topicNav = this.getTopicNav();
+                    selectedScheme = this.getSelectedScheme();
+                    topicNav = this.getTopicNav();
                     this.hideTopicNav(selectedScheme, topicNav);
                     this.showDiscussionTopics();
                     return this;
@@ -41,19 +42,19 @@
                         {
                             key: none,
                             displayName: gettext('Not divided'),
-                            descriptiveText: gettext('Discussions are unified; all learners interact with posts from other learners, regardless of the group they are in.'),
+                            descriptiveText: gettext('Discussions are unified; all learners interact with posts from other learners, regardless of the group they are in.'), //  eslint-disable-line max-len
                             selected: selectedScheme === none
                         },
                         {
                             key: enrollmentTrack,
                             displayName: gettext('Enrollment Tracks'),
-                            descriptiveText: gettext('Use enrollment tracks as the basis for dividing discussions. All learners, regardless of their enrollment track, see the same discussion topics, but within divided topics, only learners who are in the same enrollment track see and respond to each others’ posts.'),
+                            descriptiveText: gettext('Use enrollment tracks as the basis for dividing discussions. All learners, regardless of their enrollment track, see the same discussion topics, but within divided topics, only learners who are in the same enrollment track see and respond to each others’ posts.'), //  eslint-disable-line max-len
                             selected: selectedScheme === enrollmentTrack
                         },
                         {
                             key: cohort,
                             displayName: gettext('Cohorts'),
-                            descriptiveText: gettext('Use cohorts as the basis for dividing discussions. All learners, regardless of cohort, see the same discussion topics, but within divided topics, only members of the same cohort see and respond to each others’ posts. '),
+                            descriptiveText: gettext('Use cohorts as the basis for dividing discussions. All learners, regardless of cohort, see the same discussion topics, but within divided topics, only members of the same cohort see and respond to each others’ posts. '), //  eslint-disable-line max-len
                             selected: selectedScheme === cohort
                         }
 
@@ -67,7 +68,7 @@
                     this.notification = new NotificationView({
                         model: model
                     });
-                    self.$('.division-scheme-container').before(this.notification.$el);
+                    self.$('.division-scheme-container').prepend(this.notification.$el);
                     this.notification.render();
                 },
 

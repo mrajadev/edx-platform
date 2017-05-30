@@ -1244,15 +1244,17 @@
   .division-scheme-container {
     // See https://css-tricks.com/snippets/css/a-guide-to-flexbox/
     display: flex;
-    align-items: flex-start;
+    flex-direction: column;
     justify-content: space-between;
+
+    .division-scheme-items {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+    }
 
     .division-scheme {
       font-size: 18px;
-    }
-
-    .division-scheme-label {
-      font-weight: bold;
     }
 
     .division-scheme-item {
