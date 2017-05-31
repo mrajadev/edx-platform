@@ -4,7 +4,7 @@
     <div class="division-scheme-container">
         <div class="division-scheme-items">
             <% for (var i = 0; i < availableSchemes.length; i++) { %>
-                <div class="division-scheme-item">
+                <div class="division-scheme-item <% if (!availableSchemes[i].enabled) { %>is-hidden<% } %>">
                     <label class="division-scheme-label">
                         <input class="division-scheme" type="radio" name="division-scheme" id="<%- availableSchemes[i].key %>"
                                value="<%- availableSchemes[i].key %>"

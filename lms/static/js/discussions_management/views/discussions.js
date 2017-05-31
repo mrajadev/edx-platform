@@ -38,27 +38,36 @@
                 },
 
                 getDivisionSchemeData: function(selectedScheme) {
+                    var self = this;
                     return [
                         {
                             key: none,
                             displayName: gettext('Not divided'),
                             descriptiveText: gettext('Discussions are unified; all learners interact with posts from other learners, regardless of the group they are in.'), //  eslint-disable-line max-len
-                            selected: selectedScheme === none
+                            selected: selectedScheme === none,
+                            enabled: true // always leave none enabled
                         },
                         {
                             key: enrollmentTrack,
                             displayName: gettext('Enrollment Tracks'),
                             descriptiveText: gettext('Use enrollment tracks as the basis for dividing discussions. All learners, regardless of their enrollment track, see the same discussion topics, but within divided topics, only learners who are in the same enrollment track see and respond to each others’ posts.'), //  eslint-disable-line max-len
-                            selected: selectedScheme === enrollmentTrack
+                            selected: selectedScheme === enrollmentTrack,
+                            enabled: self.isSchemeAvailable(enrollmentTrack) || selectedScheme === enrollmentTrack
                         },
                         {
                             key: cohort,
                             displayName: gettext('Cohorts'),
                             descriptiveText: gettext('Use cohorts as the basis for dividing discussions. All learners, regardless of cohort, see the same discussion topics, but within divided topics, only members of the same cohort see and respond to each others’ posts. '), //  eslint-disable-line max-len
-                            selected: selectedScheme === cohort
+                            selected: selectedScheme === cohort,
+                            enabled: self.isSchemeAvailable(cohort) || selectedScheme === cohort
                         }
 
                     ];
+                },
+
+                isSchemeAvailable: function (scheme) {
+                    var self = this;
+                    return self.discussionSettings.attributes.available_division_schemes.indexOf(scheme) !== -1;
                 },
 
                 showMessage: function(message, type) {
