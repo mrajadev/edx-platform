@@ -1,12 +1,13 @@
 """
 Tests for waffle utils features.
 """
-from mock import patch
 import ddt
-from waffle.testutils import override_flag
 from django.test import TestCase
-from request_cache.middleware import RequestCache
+from mock import patch
 from opaque_keys.edx.keys import CourseKey
+from waffle.testutils import override_flag
+
+from request_cache.middleware import RequestCache
 
 from .. import CourseWaffleFlag, WaffleFlagNamespace
 from ..models import WaffleFlagCourseOverrideModel
