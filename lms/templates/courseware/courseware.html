@@ -112,7 +112,11 @@ ${HTML(fragment.foot_html())}
 % endif
 
 <div class="container">
+% if getattr(course, 'language'):
+  <div class="course-wrapper" role="presentation" lang="${course.language}">
+% else:
   <div class="course-wrapper" role="presentation">
+% endif
 
 % if disable_accordion is UNDEFINED or not disable_accordion:
     <div class="course-index">
