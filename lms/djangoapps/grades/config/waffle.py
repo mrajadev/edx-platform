@@ -18,4 +18,4 @@ def waffle():
     """
     Returns the namespaced, cached, audited Waffle class for Grades.
     """
-    return WaffleSwitchNamespace(namespace=WAFFLE_NAMESPACE, log_prefix=u'Grades: ')
+    return WaffleSwitchNamespace(name=WAFFLE_NAMESPACE, log_prefix=u'Grades: ')
