@@ -20,22 +20,26 @@ define(['backbone', 'jquery', 'edx-ui-toolkit/js/utils/spec-helpers/ajax-helpers
 
             createMockDiscussionsSettingsJson = function(dividedInlineDiscussions,
                                                          dividedCourseWideDiscussions,
-                                                         alwaysDivideInlineDiscussions) {
+                                                         alwaysDivideInlineDiscussions,
+                                                         availableDivisionSchemes) {
                 return {
                     id: 0,
                     divided_inline_discussions: dividedInlineDiscussions || [],
                     divided_course_wide_discussions: dividedCourseWideDiscussions || [],
-                    always_divide_inline_discussions: alwaysDivideInlineDiscussions || false
+                    always_divide_inline_discussions: alwaysDivideInlineDiscussions || false,
+                    available_division_schemes: availableDivisionSchemes || ['cohort']
                 };
             };
 
             createMockDiscussionsSettings = function(dividedInlineDiscussions,
                                                      dividedCourseWideDiscussions,
-                                                     alwaysDivideInlineDiscussions) {
+                                                     alwaysDivideInlineDiscussions,
+                                                     availableDivisionSchemes) {
                 return new CourseDiscussionsSettingsModel(
                     createMockDiscussionsSettingsJson(dividedInlineDiscussions,
                                                       dividedCourseWideDiscussions,
-                                                      alwaysDivideInlineDiscussions)
+                                                      alwaysDivideInlineDiscussions,
+                                                      availableDivisionSchemes)
                 );
             };
 

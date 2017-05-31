@@ -9,6 +9,8 @@
     ],
 
         function($, _, Backbone, gettext, InlineDiscussionsView, CourseWideDiscussionsView, HtmlUtils) {
+            /* global NotificationModel, NotificationView */
+
             var hiddenClass = 'is-hidden';
             var cohort = 'cohort';
             var none = 'none';
@@ -65,7 +67,7 @@
                     ];
                 },
 
-                isSchemeAvailable: function (scheme) {
+                isSchemeAvailable: function(scheme) {
                     var self = this;
                     return self.discussionSettings.attributes.available_division_schemes.indexOf(scheme) !== -1;
                 },
