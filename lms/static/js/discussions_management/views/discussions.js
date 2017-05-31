@@ -8,8 +8,7 @@
         'js/views/notification'
     ],
 
-        function($, _, Backbone, gettext, InlineDiscussionsView, CourseWideDiscussionsView, HtmlUtils,
-                 NotificationModel, NotificationView) {
+        function($, _, Backbone, gettext, InlineDiscussionsView, CourseWideDiscussionsView, HtmlUtils) {
             var hiddenClass = 'is-hidden';
             var cohort = 'cohort';
             var none = 'none';
