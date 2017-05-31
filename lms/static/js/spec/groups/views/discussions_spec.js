@@ -132,14 +132,14 @@ define(['backbone', 'jquery', 'edx-ui-toolkit/js/utils/spec-helpers/ajax-helpers
                 expect($courseWideDiscussionsForm.text()).
                     toContain('Course-Wide Discussion Topics');
                 expect($courseWideDiscussionsForm.text()).
-                    toContain('Select the course-wide discussion topics that you want to divide by cohort.');
+                    toContain('Select the course-wide discussion topics that you want to divide.');
 
                 // Should see the inline discussions form and its content
                 expect($inlineDiscussionsForm.length).toBe(1);
                 expect($inlineDiscussionsForm.text()).
                     toContain('Content-Specific Discussion Topics');
                 expect($inlineDiscussionsForm.text()).
-                    toContain('Specify whether content-specific discussion topics are divided by cohort.');
+                    toContain('Specify whether content-specific discussion topics are divided.');
             };
 
             beforeEach(function() {
