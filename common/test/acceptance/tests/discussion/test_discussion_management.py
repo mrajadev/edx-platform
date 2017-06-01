@@ -87,8 +87,11 @@ class BaseDividedDiscussionTest(UniqueCourseTest, CohortTestMixin):
         management instructor dashboard tab.
         """
         self.browser.refresh()
+        self.discussion_management_page.wait_for_page()
+
         self.instructor_dashboard_page.select_discussion_management()
         self.discussion_management_page.wait_for_page()
+
         self.check_discussion_topic_visibility(topics_visible)
 
     def verify_save_confirmation_message(self, key):
